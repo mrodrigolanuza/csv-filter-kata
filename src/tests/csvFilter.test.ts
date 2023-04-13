@@ -22,4 +22,15 @@ describe("The CSV filter..", ()=>{
         expect(result).toEqual([headerLine, invoiceLine]);
 
     });
+    it("exclude invoice lines with IVA and IGIC taxes", ()=>{
+        
+        const headerLine = 'Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente';
+        const invoiceLine = '1,02/05/2021,1000,790,21,7,ACER Laptop,B76430134,';
+        const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
+
+        const result = csvFilter.filteredLines;
+
+        expect(result).toEqual([headerLine]);
+
+    });
 });
