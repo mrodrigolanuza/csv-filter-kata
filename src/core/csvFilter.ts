@@ -10,7 +10,10 @@ export class CSVFilter{
         const result = [];
         result.push(this.lines[0]);
         const fields = this.lines[1].split(',');
-        if((fields[4] && !fields[5])|| (!fields[4] && fields[5])){
+        const ivaField = fields[4];
+        const igicField = fields[5];
+        const taxFieldAreMutuallyExclusive = (ivaField && !igicField)|| (!ivaField && igicField);
+        if(taxFieldAreMutuallyExclusive){
             result.push(this.lines[1]);
         }
 
