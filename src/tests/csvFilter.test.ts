@@ -37,4 +37,12 @@ describe("The CSV filter..", ()=>{
 
         expect(result).toEqual([headerLine]);
     });
+    it("exclude invoice lines with non numeric IVA or IGIC", ()=>{
+        const invoiceLine = '1,02/05/2021,1000,790,iva,,ACER Laptop,B76430134,';
+        const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
+
+        const result = csvFilter.filteredLines;
+
+        expect(result).toEqual([headerLine]);
+    });
 });
