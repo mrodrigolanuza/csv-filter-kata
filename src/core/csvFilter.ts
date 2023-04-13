@@ -16,11 +16,12 @@ export class CSVFilter{
         const igicField = fields[5];
         const regexDecimal = /[0-9]+/;
         const taxFieldAreMutuallyExclusive = (ivaField.match(regexDecimal) && !igicField)|| (!ivaField && igicField.match(regexDecimal));
-        
+        const netAmountIsWellCalculated = 
+            this.checkIfNetAmountIsCorrect(netAmout, grossAmount, ivaField) || 
+            this.checkIfNetAmountIsCorrect(netAmout, grossAmount, igicField);
         
         if(taxFieldAreMutuallyExclusive && 
-          (this.checkIfNetAmountIsCorrect(netAmout, grossAmount, ivaField) || 
-           this.checkIfNetAmountIsCorrect(netAmout, grossAmount, igicField))){
+           netAmountIsWellCalculated){
             result.push(this.lines[1]);
         }
 
