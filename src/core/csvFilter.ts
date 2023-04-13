@@ -1,10 +1,10 @@
 export class CSVFilter{
     
-    constructor(lines:string[]){
-        
+    constructor(private lines:string[]){
+
     }
 
     get filteredLines(){
-        return [];
+        return this.lines;
     }
 }
