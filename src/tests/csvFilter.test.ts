@@ -46,16 +46,23 @@ describe("The CSV filter..", ()=>{
 
         expect(result).toEqual([headerLine]);
     });
+    it("exclude invoice lines with incorrect IVA calculation", ()=>{
+        const invoiceLine = fileWithoneInvoiceLineHaving('21','', '900');
+        const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
-    function fileWithoneInvoiceLineHaving(ivaTax:string = '21', igicTax:string = emptyField){
+        const result = csvFilter.filteredLines;
+
+        expect(result).toEqual([headerLine]);
+    });
+
+    function fileWithoneInvoiceLineHaving(ivaTax:string = '21', igicTax:string = emptyField, netAmount:string = '790'){
         const invoiceId = '1';
         const invoiceDate = '02/05/2019';
         const grossAmount = '1000';
-        const netAmout = '790'
         const concept = 'ACERLaptop';
         const nif = 'B76430134';
     
-        return [invoiceId, invoiceDate, grossAmount, netAmout, ivaTax, igicTax, concept, nif].join(',');
+        return [invoiceId, invoiceDate, grossAmount, netAmount, ivaTax, igicTax, concept, nif].join(',');
     }
 });
 
