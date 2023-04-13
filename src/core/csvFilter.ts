@@ -18,7 +18,9 @@ export class CSVFilter{
         const taxFieldAreMutuallyExclusive = (ivaField.match(regexDecimal) && !igicField)|| (!ivaField && igicField.match(regexDecimal));
         
         
-        if(taxFieldAreMutuallyExclusive && this.checkIfNetAmountIsCorrect(netAmout, grossAmount, ivaField)){
+        if(taxFieldAreMutuallyExclusive && 
+          (this.checkIfNetAmountIsCorrect(netAmout, grossAmount, ivaField) || 
+           this.checkIfNetAmountIsCorrect(netAmout, grossAmount, igicField))){
             result.push(this.lines[1]);
         }
 
