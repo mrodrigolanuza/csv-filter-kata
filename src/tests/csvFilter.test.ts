@@ -12,9 +12,21 @@ import { CSVFilter } from "../core/csvFilter";
 
 describe("The CSV filter..", ()=>{
     const headerLine = 'Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente';
+    const emptyField = '';
+
+    function fileWithoneInvoiceLineHaving(ivaTax:string = '21', igicTax:string = emptyField){
+        const invoiceId = '1';
+        const invoiceDate = '02/05/2019';
+        const grossAmount = '1000';
+        const netAmout = '790'
+        const concept = 'ACERLaptop';
+        const nif = 'B76430134';
+
+        return [invoiceId, invoiceDate, grossAmount, netAmout, ivaTax, igicTax, concept, nif].join(',');
+    }
 
     it("creates a csv file with the same content as input file when all requirements are met", ()=>{
-        const invoiceLine = '1,02/05/2019,1008,810,19,,ACERLaptop,B76430134,';
+        const invoiceLine = fileWithoneInvoiceLineHaving();
         const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
         const result = csvFilter.filteredLines;
