@@ -1,7 +1,9 @@
 export class CSVFilter{
-    
-    constructor(private lines:string[]){
+    public constructor(private readonly lines:string[]){}
 
+    //Método factoría
+    static create(lines:string[]){
+        return new CSVFilter(lines);
     }
 
     get filteredLines(){

@@ -15,9 +15,9 @@ describe("The CSV filter..", ()=>{
         
         const headerLine = 'Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente';
         const invoiceLine = '1,02/05/2019,1008,810,19,,ACERLaptop,B76430134,';
-        const filter = new CSVFilter([headerLine, invoiceLine]);
+        const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
-        const result = filter.filteredLines;
+        const result = csvFilter.filteredLines;
 
         expect(result).toEqual([headerLine, invoiceLine]);
 
