@@ -62,6 +62,14 @@ describe("The CSV filter..", ()=>{
 
         expect(result).toEqual([headerLine]);
     });
+    it("exclude invoice lines with incorrect IGIC calculation", ()=>{
+        const invoiceLine = fileWithoneInvoiceLineHaving('','7', '900');
+        const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
+
+        const result = csvFilter.filteredLines;
+
+        expect(result).toEqual([headerLine]);
+    });
     
     function fileWithoneInvoiceLineHaving(ivaTax:string = '21', igicTax:string = emptyField, netAmount:string = '790'){
         const invoiceId = '1';
