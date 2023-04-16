@@ -105,6 +105,18 @@ describe("The CSV filter..", ()=>{
 
         expect(result).toEqual([headerLine]);
     });
+    it("exclude repeated invoices", ()=>{
+        const invoiceLine = fileWithoneInvoiceLineHaving({ invoiceId: '1' });
+        const invoiceLine2 = fileWithoneInvoiceLineHaving({ invoiceId: '1' });
+        const invoiceLine3 = fileWithoneInvoiceLineHaving({ invoiceId: '3' });
+        const invoiceLine4 = fileWithoneInvoiceLineHaving({ invoiceId: '4' });
+        const invoiceLine5 = fileWithoneInvoiceLineHaving({ invoiceId: '3' });
+        const csvFilter = CSVFilter.create([headerLine, invoiceLine, invoiceLine2, invoiceLine3, invoiceLine4, invoiceLine5]);
+
+        const result = csvFilter.filteredLines;
+
+        expect(result).toEqual([headerLine, invoiceLine4]);
+    });
     
     interface FileWithoneInvoiceLineHavingParams {
         invoiceId?: string;
