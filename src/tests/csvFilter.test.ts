@@ -107,6 +107,7 @@ describe("The CSV filter..", ()=>{
     });
     
     interface FileWithoneInvoiceLineHavingParams {
+        invoiceId?: string;
         ivaTax?: string;
         igicTax?: string;
         netAmount?: string;
@@ -114,12 +115,12 @@ describe("The CSV filter..", ()=>{
     }
 
     function fileWithoneInvoiceLineHaving({
+        invoiceId = '1',
         ivaTax = '21', 
         igicTax = emptyField, 
         netAmount = '790',
         nif = emptyField
     }: FileWithoneInvoiceLineHavingParams){
-        const invoiceId = '1';
         const invoiceDate = '02/05/2019';
         const grossAmount = '1000';
         const concept = 'ACERLaptop';
