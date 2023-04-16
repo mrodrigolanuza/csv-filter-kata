@@ -124,6 +124,13 @@ describe("The CSV filter..", ()=>{
 
         expect(result).toEqual([]);
     });
+    it("not allows a file with a single line (no header)", ()=>{
+        const invoiceLine = fileWithoneInvoiceLineHaving({});
+
+        const result = () => CSVFilter.create([invoiceLine]);
+
+        expect(result).toThrow();
+    });
 
     interface FileWithoneInvoiceLineHavingParams {
         invoiceId?: string;
