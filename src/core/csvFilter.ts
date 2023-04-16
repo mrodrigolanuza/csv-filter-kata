@@ -8,7 +8,9 @@ export class CSVFilter{
     get filteredLines(){
         const header = this.lines[0];
         const invoices = this.lines.slice(1);
-        return [header].concat(invoices.filter(this.validateInvoice));
+        const validatedInvoices = invoices.filter(this.validateInvoice);
+        const duplicatedIds = this.takeRepeatedInvoicesIds(validatedInvoices);
+        return [header].concat(validatedInvoices.filter((invoice)=>!duplicatedIds.includes(invoice.split(',')[0])));
     }
 
     private validateInvoice = (invoice) => {
