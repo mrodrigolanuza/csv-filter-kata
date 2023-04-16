@@ -89,11 +89,7 @@ describe("The CSV filter..", ()=>{
         expect(result).toEqual([headerLine]);
     });
     it("exclude invoice lines with CIF an NIF both completed", ()=>{
-        const invoiceLine = fileWithoneInvoiceLineHaving({
-            ivaTax: '21',
-            igicTax: '7',
-            netAmount: '790'
-        });
+        const invoiceLine = fileWithoneInvoiceLineHaving({ nif: 'B75457554' });
         const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
         const result = csvFilter.filteredLines;
