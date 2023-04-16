@@ -34,6 +34,15 @@ describe("The CSV filter..", ()=>{
 
         expect(result).toEqual([headerLine, invoiceLine]);
     });
+    it("creates a multiple line csv file with the same content as input file when all requirements are met", ()=>{
+        const invoiceLine = fileWithoneInvoiceLineHaving({});
+        const invoiceLine2 = fileWithoneInvoiceLineHaving({});
+        const csvFilter = CSVFilter.create([headerLine, invoiceLine, invoiceLine2]);
+
+        const result = csvFilter.filteredLines;
+
+        expect(result).toEqual([headerLine, invoiceLine, invoiceLine2]);
+    });
     it("exclude invoice lines with IVA and IGIC taxes", ()=>{
         const invoiceLine = fileWithoneInvoiceLineHaving({
             ivaTax: '21',
