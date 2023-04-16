@@ -9,26 +9,29 @@ export class CSVFilter{
     get filteredLines(){
         const result = [];
         result.push(this.lines[0]);
-        const fields = this.lines[1].split(',');
-        const grossAmount = fields[2];
-        const netAmout = fields[3]
-        const ivaField = fields[4];
-        const igicField = fields[5];
-        const cifField = fields[7];
-        const nifField = fields[8];
-        const regexDecimal = /[0-9]+/;
-        const taxFieldAreMutuallyExclusive = (ivaField.match(regexDecimal) && !igicField)|| (!ivaField && igicField.match(regexDecimal));
-        const cifNifAreMutiallyExclusive = (!cifField || !nifField);
-        const netAmountIsWellCalculated = 
-            this.checkIfNetAmountIsCorrect(netAmout, grossAmount, ivaField) || 
-            this.checkIfNetAmountIsCorrect(netAmout, grossAmount, igicField);
+        const invoices = this.lines.slice(1);
+        invoices.forEach(invoice =>{
+            const fields = invoice.split(',');
+            const grossAmount = fields[2];
+            const netAmout = fields[3]
+            const ivaField = fields[4];
+            const igicField = fields[5];
+            const cifField = fields[7];
+            const nifField = fields[8];
+            const regexDecimal = /[0-9]+/;
+            const taxFieldAreMutuallyExclusive = (ivaField.match(regexDecimal) && !igicField)|| (!ivaField && igicField.match(regexDecimal));
+            const cifNifAreMutiallyExclusive = (!cifField || !nifField);
+            const netAmountIsWellCalculated = 
+                this.checkIfNetAmountIsCorrect(netAmout, grossAmount, ivaField) || 
+                this.checkIfNetAmountIsCorrect(netAmout, grossAmount, igicField);
+            
+            if(taxFieldAreMutuallyExclusive && 
+            cifNifAreMutiallyExclusive && 
+            netAmountIsWellCalculated ){
+                result.push(invoice);
+            }
+        });
         
-        if(taxFieldAreMutuallyExclusive && 
-           cifNifAreMutiallyExclusive && 
-           netAmountIsWellCalculated ){
-            result.push(this.lines[1]);
-        }
-
         return result;
     }
 
