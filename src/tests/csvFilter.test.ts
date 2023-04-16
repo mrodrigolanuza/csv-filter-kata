@@ -15,7 +15,7 @@ describe("The CSV filter..", ()=>{
     const emptyField = '';
 
     it("creates a csv file with the same content as input file when all requirements are met", ()=>{
-        const invoiceLine = fileWithoneInvoiceLineHaving();
+        const invoiceLine = fileWithoneInvoiceLineHaving({});
         const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
         const result = csvFilter.filteredLines;
@@ -23,7 +23,11 @@ describe("The CSV filter..", ()=>{
         expect(result).toEqual([headerLine, invoiceLine]);
     });
     it("includes invoice lines with correct IGIC applied", ()=>{
-        const invoiceLine = fileWithoneInvoiceLineHaving('','7', '930');
+        const invoiceLine = fileWithoneInvoiceLineHaving({
+            ivaTax: '',
+            igicTax: '7',
+            netAmount: '930'
+        });
         const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
         const result = csvFilter.filteredLines;
@@ -31,7 +35,10 @@ describe("The CSV filter..", ()=>{
         expect(result).toEqual([headerLine, invoiceLine]);
     });
     it("exclude invoice lines with IVA and IGIC taxes", ()=>{
-        const invoiceLine = fileWithoneInvoiceLineHaving('21','7');
+        const invoiceLine = fileWithoneInvoiceLineHaving({
+            ivaTax: '21',
+            igicTax: '7'
+        });
         const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
         const result = csvFilter.filteredLines;
@@ -39,7 +46,10 @@ describe("The CSV filter..", ()=>{
         expect(result).toEqual([headerLine]);
     });
     it("exclude invoice lines with neither IVA nor IGIC taxes", ()=>{
-        const invoiceLine = fileWithoneInvoiceLineHaving('','');
+        const invoiceLine = fileWithoneInvoiceLineHaving({
+            ivaTax: '',
+            igicTax: ''
+        });
         const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
         const result = csvFilter.filteredLines;
@@ -47,7 +57,9 @@ describe("The CSV filter..", ()=>{
         expect(result).toEqual([headerLine]);
     });
     it("exclude invoice lines with non numeric IVA or IGIC", ()=>{
-        const invoiceLine = fileWithoneInvoiceLineHaving('IVA','');
+        const invoiceLine = fileWithoneInvoiceLineHaving({
+            ivaTax: 'no-numeric-iva'
+        });
         const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
         const result = csvFilter.filteredLines;
@@ -55,7 +67,10 @@ describe("The CSV filter..", ()=>{
         expect(result).toEqual([headerLine]);
     });
     it("exclude invoice lines with incorrect IVA calculation", ()=>{
-        const invoiceLine = fileWithoneInvoiceLineHaving('21','', '900');
+        const invoiceLine = fileWithoneInvoiceLineHaving({
+            ivaTax: '21',
+            netAmount: '900'
+        });
         const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
         const result = csvFilter.filteredLines;
@@ -63,7 +78,22 @@ describe("The CSV filter..", ()=>{
         expect(result).toEqual([headerLine]);
     });
     it("exclude invoice lines with incorrect IGIC calculation", ()=>{
-        const invoiceLine = fileWithoneInvoiceLineHaving('','7', '900');
+        const invoiceLine = fileWithoneInvoiceLineHaving({
+            igicTax: '7',
+            netAmount: '900'
+        });
+        const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
+
+        const result = csvFilter.filteredLines;
+
+        expect(result).toEqual([headerLine]);
+    });
+    it("exclude invoice lines with CIF an NIF both completed", ()=>{
+        const invoiceLine = fileWithoneInvoiceLineHaving({
+            ivaTax: '21',
+            igicTax: '7',
+            netAmount: '790'
+        });
         const csvFilter = CSVFilter.create([headerLine, invoiceLine]);
 
         const result = csvFilter.filteredLines;
@@ -71,14 +101,26 @@ describe("The CSV filter..", ()=>{
         expect(result).toEqual([headerLine]);
     });
     
-    function fileWithoneInvoiceLineHaving(ivaTax:string = '21', igicTax:string = emptyField, netAmount:string = '790'){
+    interface FileWithoneInvoiceLineHavingParams {
+        ivaTax?: string;
+        igicTax?: string;
+        netAmount?: string;
+        nif?: string;
+    }
+
+    function fileWithoneInvoiceLineHaving({
+        ivaTax = '21', 
+        igicTax = emptyField, 
+        netAmount = '790',
+        nif = emptyField
+    }: FileWithoneInvoiceLineHavingParams){
         const invoiceId = '1';
         const invoiceDate = '02/05/2019';
         const grossAmount = '1000';
         const concept = 'ACERLaptop';
-        const nif = 'B76430134';
+        const cif = 'B76430134';
     
-        return [invoiceId, invoiceDate, grossAmount, netAmount, ivaTax, igicTax, concept, nif].join(',');
+        return [invoiceId, invoiceDate, grossAmount, netAmount, ivaTax, igicTax, concept, cif, nif].join(',');
     }
 });
 
