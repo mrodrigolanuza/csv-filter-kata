@@ -117,7 +117,14 @@ describe("The CSV filter..", ()=>{
 
         expect(result).toEqual([headerLine, invoiceLine4]);
     });
-    
+    it("empty file creates another empty file", ()=>{
+        const csvFilter = CSVFilter.create([]);
+
+        const result = csvFilter.filteredLines;
+
+        expect(result).toEqual([]);
+    });
+
     interface FileWithoneInvoiceLineHavingParams {
         invoiceId?: string;
         ivaTax?: string;
