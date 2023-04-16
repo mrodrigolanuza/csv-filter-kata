@@ -14,9 +14,11 @@ export class CSVFilter{
         const netAmout = fields[3]
         const ivaField = fields[4];
         const igicField = fields[5];
+        const cifField = fields[7];
+        const nifField = fields[8];
         const regexDecimal = /[0-9]+/;
         const taxFieldAreMutuallyExclusive = (ivaField.match(regexDecimal) && !igicField)|| (!ivaField && igicField.match(regexDecimal));
-        const cifNifAreMutiallyExclusive = (!fields[7] || !fields[8]);
+        const cifNifAreMutiallyExclusive = (!cifField || !nifField);
         const netAmountIsWellCalculated = 
             this.checkIfNetAmountIsCorrect(netAmout, grossAmount, ivaField) || 
             this.checkIfNetAmountIsCorrect(netAmout, grossAmount, igicField);
