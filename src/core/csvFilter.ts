@@ -3,6 +3,10 @@ export class CSVFilter{
 
     //Método factoría
     static create(lines:string[]){
+        if(lines.length === 1){
+            throw new Error('Single line is not allowed');
+        }
+
         return new CSVFilter(lines);
     }
     get filteredLines(){
