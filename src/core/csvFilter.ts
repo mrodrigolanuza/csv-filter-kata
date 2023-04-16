@@ -35,4 +35,9 @@ export class CSVFilter{
         const parsedTax = parseFloat(taxField);
         return parsedNetAmount === parsedGrossAmount - (parsedGrossAmount * parsedTax) / 100;
     }
+
+    takeRepeatedInvoicesIds(invoices:string[]){
+        const invoicesIds = invoices.map(invoice =>  invoice.split(',')[0]);
+        return invoicesIds.filter((id, index) => invoicesIds.indexOf(id) != index);
+    }
 }
