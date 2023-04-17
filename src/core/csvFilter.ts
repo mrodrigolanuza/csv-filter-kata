@@ -16,13 +16,13 @@ export class CSVFilter{
            
         const header = this.lines[0];
         const invoices = this.lines.slice(1);
-        const validatedInvoices = invoices.filter(this.validateInvoice);
+        const validatedInvoices = invoices.filter(this.isValidInvoice);
         const duplicatedIds = this.takeRepeatedInvoicesIds(validatedInvoices);
         const validatedAndNonRepeatedInvoices = validatedInvoices.filter((invoice)=>!duplicatedIds.includes(invoice.split(',')[0]));
         return [header].concat(validatedAndNonRepeatedInvoices);
     }
 
-    private validateInvoice = (invoice) => {
+    private isValidInvoice = (invoice) => {
         const fields = invoice.split(',');
         const grossAmount = fields[2];
         const netAmout = fields[3]
@@ -31,16 +31,16 @@ export class CSVFilter{
         const cifField = fields[7];
         const nifField = fields[8];
         const regexDecimal = /[0-9]+/;
-        const taxFieldAreMutuallyExclusive = (ivaField.match(regexDecimal) && !igicField)|| (!ivaField && igicField.match(regexDecimal));
-        const cifNifAreMutiallyExclusive = (!cifField || !nifField);
-        const netAmountIsWellCalculated = 
-            this.checkIfNetAmountIsCorrect(netAmout, grossAmount, ivaField) || 
-            this.checkIfNetAmountIsCorrect(netAmout, grossAmount, igicField);
+        const areTaxFieldMutuallyExclusive = (ivaField.match(regexDecimal) && !igicField)|| (!ivaField && igicField.match(regexDecimal));
+        const areCifNifMutiallyExclusive = (!cifField || !nifField);
+        const isNetAmountWellCalculated = 
+            this.hasCorrectAmount(netAmout, grossAmount, ivaField) || 
+            this.hasCorrectAmount(netAmout, grossAmount, igicField);
         
-        return taxFieldAreMutuallyExclusive && cifNifAreMutiallyExclusive && netAmountIsWellCalculated;
+        return areTaxFieldMutuallyExclusive && areCifNifMutiallyExclusive && isNetAmountWellCalculated;
     }
 
-    private checkIfNetAmountIsCorrect(netAmountField:string, grossAmountField:string, taxField: string){
+    private hasCorrectAmount(netAmountField:string, grossAmountField:string, taxField: string){
         const parsedNetAmount = parseFloat(netAmountField);
         const parsedGrossAmount = parseFloat(grossAmountField);
         const parsedTax = parseFloat(taxField);
